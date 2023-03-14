@@ -137,6 +137,27 @@ li:hover {
 	width: 100%;
 
 }
+
+#categories button {
+	font-family: 'Syne';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 19px;
+	text-align: center;
+	color: #1D6154;
+	border: solid 2px #1D6154;
+	padding: 9px 20px;
+	border-radius: 20px;
+	margin: 10px;
+}
+
+#categories {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
 #contact {
 	width: 50%;
 margin: auto;
