@@ -138,7 +138,13 @@ li:hover {
 
 }
 
-#categories button {
+#filtres {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+#filtres button {
 	font-family: 'Syne';
 	font-style: normal;
 	font-weight: 700;
@@ -152,11 +158,11 @@ li:hover {
 	margin: 10px;
 }
 
-#categories {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
+#filtres button:active {
+	background-color: #1D6154;
+	color: #FFFFFF;
 }
+
 
 #contact {
 	width: 50%;
