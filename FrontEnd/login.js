@@ -1,10 +1,5 @@
-const lien = "http://localhost:5678/api/users/login";
-const form = document.querySelector("form");
-const email = document.querySelector("input[type='email']");
-const password = document.querySelector("input[type='password']");
-
 //J'ajoute event quand on submit le formulaire
-//J'essaye d'améliorer la méthode
+//J'essaye d'améliorer la méthode en bas
 /*form.addEventListener("submit", (e) => {
   e.preventDefault();*/
 
@@ -23,24 +18,48 @@ const password = document.querySelector("input[type='password']");
 
 //J'ajoute event au submit du form
 function submitForm() {
+  const form = document.querySelector("form");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    const lien = "http://localhost:5678/api/users/login";
+    let userEmail = document.getElementById("email").value;
+
+    let userPassword = document.getElementById("password").value;
+
     //Création de l'objet utilisateur
-    const utilisateur = {
-      email: e.target.email.value,
-      password: e.target.password.value,
+    let utilisateur = {
+      email: userEmail,
+      password: userPassword,
     };
 
     //Création de la charge utile au format Json
-    const chargeUtile = JSON.stringify(utilisateur);
+    let chargeUtile = JSON.stringify(utilisateur);
+
     //Appel de la fonction fetch
     fetch(lien, {
       method: "POST",
-      headers: { Allow: POST, "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: chargeUtile,
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json().then(function (finalResult) {
+          console.log(finalResult);
+          window.localStorage.setItem("token", finalResult.token); //NB toujours tester la présence de la propriété
+
+          window.localStorage.setItem("userId", finalResult.userId);
+          window.location = "/FrontEnd/index.html";
+        });
+      } else {
+        alert("Erreur dans l’identifiant ou le mot de passe");
+      }
     });
   });
 }
+
+submitForm();
 
 //“Erreur dans l’identifiant ou le mot de passe”
