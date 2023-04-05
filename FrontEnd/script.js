@@ -9,6 +9,7 @@ const reponse = fetch("http://localhost:5678/api/works").then((res) => {
       console.log(allProjects);
       genererWorks(data);
       genererCategories(data);
+      genererWorksModal(data);
     });
   } else {
     console.log(
@@ -105,3 +106,122 @@ function worksFilter() {
     });
   }
 }
+
+//Visualisation de la boite modale
+let modal = null;
+const focusableSelector = "button, a, input, textarea";
+let focusables = [];
+
+const openModal = function (e) {
+  e.preventDefault();
+  modal = document.querySelector(e.target.getAttribute("href"));
+  focusables = Array.from(modal.querySelectorAll(focusableSelector));
+  modal.style.display = null;
+  modal.removeAttribute("aria-hidden");
+  modal.setAttribute("aria-modal", "true");
+  //Fermeture de la boite
+  modal.addEventListener("click", closeModal);
+  modal.querySelector(".close-modal").addEventListener("click", closeModal);
+  modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
+};
+
+//Fermeture de la boite modale
+const closeModal = function (e) {
+  if (modal === null) return;
+  e.preventDefault();
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  modal.removeAttribute("aria-modal");
+  modal.removeEventListener("click", closeModal);
+  modal.querySelector(".close-modal").removeEventListener("click", closeModal);
+  modal
+    .querySelector(".modal-stop")
+    .removeEventListener("click", stopPropagation);
+  modal = null;
+};
+
+//Evite que la boite se ferme quand on click dessous
+const stopPropagation = function (e) {
+  e.stopPropagation();
+};
+
+//Tab sur les différents éléments de la modale
+const focusInModal = function (e) {
+  e.preventDefault();
+  let index = focusables.findIndex((f) => f === modal.querySelector(":focus"));
+  if (e.shiftKey === true) {
+    index--;
+  } else {
+    index++;
+  }
+  if (index >= focusables.length) {
+    index = 0;
+  }
+  if (index < 0) {
+    index = focusables.length - 1;
+  }
+  focusables[index].focus();
+};
+
+document.querySelector(".open-modal").addEventListener("click", openModal);
+
+//Fermeture de la boite avec la touche Escape
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" || e.key === "Esc") {
+    closeModal(e);
+  }
+  if (e.key === "Tab" && modal !== null) {
+    focusInModal(e);
+  }
+});
+
+//Creation de galerie dans la boite modale
+function genererWorksModal(works) {
+  for (let i = 0; i < works.length; i++) {
+    const article = works[i];
+
+    const gallery = document.querySelector("#galerie-modal");
+
+    const figure = document.createElement("figure");
+    gallery.appendChild(figure);
+
+    const trash = document.createElement("i");
+    trash.className = "fa-regular fa-trash-can";
+    figure.appendChild(trash);
+
+    const image = document.createElement("img");
+    image.src = article.imageUrl;
+    figure.appendChild(image);
+
+    //function pour faire apparaitre l'icone d'expansion de l'image
+    let expand;
+    image.addEventListener("pointerover", function () {
+      expand = document.createElement("i");
+      expand.className = "fa-solid fa-arrows-up-down-left-right";
+      figure.appendChild(expand);
+    });
+
+    image.addEventListener("pointerout", function () {
+      figure.removeChild(expand);
+    });
+
+    const figcaption = document.createElement("figcaption");
+    figcaption.innerText = "éditer";
+    figure.appendChild(figcaption);
+  }
+}
+
+// //Verifier l'existence du token dans le local Storage
+// function checkIfTokenExit() {
+//   const unloggedHidden = document.querySelectorAll(".unlogged-hidden");
+//   console.log(unloggedHidden);
+//   return !(localStorage.getItem("token") === null);
+// }
+
+// if (checkIfTokenExit()) {
+//   alert("Un token exist");
+// } else {
+//   alert("pas de token trouvé");
+// }
+
+//Pour la fonction logout il faut effacer les données de connexion dans le localStorage (token, id)

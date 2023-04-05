@@ -48,6 +48,10 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+* {
+	box-sizing: border-box;
+}
 /** end reset css**/
 body {
 	max-width: 1140px;
@@ -60,6 +64,7 @@ header {
 	justify-content: space-between;
 	margin: 50px 0
 }
+
 section {
 	margin: 50px 0
 }
@@ -77,6 +82,7 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
+	margin-top: 4px;
 }
 
 h2{
@@ -89,7 +95,7 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
+	
 }
 nav li {
 	padding: 0 10px;
@@ -108,20 +114,51 @@ nav li a:active {
 	font-weight: bold;
 }
 
+#bandeau {
+	display: flex;
+	flex-direction: row;
+	background-color: black;
+	height: 59px;
+	width: 100%;
+	color: white;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+}
+
+.button-blanc {	font-family: 'Work Sans';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	text-align: center;
+	color: black;
+	background-color: white;
+	padding: 9px 20px;
+	border-radius: 20px;
+	margin: 10px;
+
+}
 #introduction {
 	display: flex;
 	align-items: center;
 }
 
 #introduction figure {
-	flex: 1
+	/*flex: 1;*/
+	display: flex;
+	flex-direction: column;
+	width: 50%;
+	margin-right: 70px;
 }
 
+/*
 #introduction img {
 	display: block;
 	margin: auto;
 	width: 80%;
-}
+}*/
+
 
 #introduction article {
 	flex: 1
@@ -137,7 +174,12 @@ nav li a:active {
 
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+}
+
+#portfolio .modifier {
+	position: relative;
+    top: -35px;
+    right: -700px;
 }
 
 .gallery {
@@ -157,6 +199,7 @@ nav li a:active {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	margin-bottom: 3em;
 }
 
 #filtres button {
@@ -192,34 +235,38 @@ nav li a:active {
 }
 #contact form {
 	text-align: left;
-	margin-top:30px;
+	margin: 35px 0 45px 0;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input, #login input {
-	height: 50px;
-	font-size: 1.2em;
+#name, #email, #password, #message {
 	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-#contact label, #login label {
-	margin: 2em 0 1em 0;
-}
-#contact textarea {
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin: 0.5em 0 2em 0;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);	font-size: 1.2em;
 }
 
-input[type="submit"]{
-	font-family: 'Syne';
-	font-weight: 700;
+#name, #email, #password {
+	height: 50px;
+}
+
+.btn-vert{
 	color: white;
 	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 14px;
+	height: 36px;
+	min-width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+    border: none;
+	margin : auto ;
+}
+
+.modal-wrapper .btn-vert {
+	width: 237px;
+	margin: 38px 0 23px 0;
 }
 
 footer {
@@ -251,3 +298,102 @@ footer nav ul {
 a:visited{
 	color: black;
 }
+
+.modifier {
+	display: flex;
+	margin: 15px 0;
+}
+
+.fa-pen-to-square {
+	margin-right: 7px;
+}
+
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.8);
+}
+
+.modal-wrapper {
+	overflow: auto;
+	background-color: white;
+    padding: 40px 90px;
+	max-width: calc(100vh - 20px);
+	max-height: calc(100vh - 20px);
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.modal-wrapper h3 {
+	font-family: Work Sans;
+	font-size: 26px;
+	font-weight: 400;
+	line-height: 30px;
+	letter-spacing: 0em;
+	text-align: center;
+}
+
+.modal-wrapper a {
+	font-family: Syne;
+	font-size: 14px;
+	font-weight: 400;
+	color: #D65353;
+	text-decoration: none;
+} 
+
+#galerie-modal {
+	display: grid;
+	grid-template-columns: 78px 78px 78px 78px 78px;
+	gap: 10px;
+    padding: 30px 0 55px 0;
+	border-bottom: solid 1px #B3B3B3;
+}
+
+#galerie-modal figure {
+	height: 125px;
+}
+
+#galerie-modal img {
+	width: 78px;
+}
+
+#galerie-modal i {
+	color: white;
+	background-color: black;
+	font-size: 9px;
+	width: 17px;
+	height: 17px;
+	border-radius: 2px;
+	text-justify: center;
+	text-align: center;
+	padding: 4px;
+}
+
+.modal-wrapper .fa-xmark {
+	color: black;
+	font-size: 16px;
+	position: relative;
+	left: 270px;
+	bottom: 10px;
+}
+
+.modal-wrapper .fa-trash-can {
+	position: relative;
+    left: 56px;
+    top: 23px;
+}
+
+.modal-wrapper .fa-arrows-up-down-left-right {
+	position: relative;
+	left: 35px;
+	bottom: 114px;
+}
+
