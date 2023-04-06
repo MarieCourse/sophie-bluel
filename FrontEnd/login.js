@@ -51,7 +51,7 @@ function submitForm() {
           window.localStorage.setItem("token", finalResult.token); //NB toujours tester la présence de la propriété
 
           window.localStorage.setItem("userId", finalResult.userId);
-          window.location = "/FrontEnd/index.html";
+          window.location = "./index.html";
         });
       } else {
         alert("Erreur dans l’identifiant ou le mot de passe");

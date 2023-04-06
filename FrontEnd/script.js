@@ -6,7 +6,7 @@ const reponse = fetch("http://localhost:5678/api/works").then((res) => {
   if (res.ok) {
     return res.json().then(function (data) {
       allProjects = data; //Réutiliser pour le filtre Tous
-      console.log(allProjects);
+      //console.log(allProjects);
       genererWorks(data);
       genererCategories(data);
       genererWorksModal(data);
@@ -84,7 +84,6 @@ setTimeout(() => {
 function worksFilter() {
   //Je récupère tous les filtres
   let filters = document.getElementsByClassName("filter");
-  console.log(filters);
   for (let i = 0; i < filters.length; i++) {
     filters[i].addEventListener("click", () => {
       console.log(filters[i]);
@@ -119,13 +118,13 @@ const openModal = function (e) {
   modal.style.display = null;
   modal.removeAttribute("aria-hidden");
   modal.setAttribute("aria-modal", "true");
-  //Fermeture de la boite
+  //Appel function fermeture de la boite
   modal.addEventListener("click", closeModal);
   modal.querySelector(".close-modal").addEventListener("click", closeModal);
   modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
 };
 
-//Fermeture de la boite modale
+//Function pour fermer de la boite modale
 const closeModal = function (e) {
   if (modal === null) return;
   e.preventDefault();
@@ -211,17 +210,31 @@ function genererWorksModal(works) {
   }
 }
 
-// //Verifier l'existence du token dans le local Storage
-// function checkIfTokenExit() {
-//   const unloggedHidden = document.querySelectorAll(".unlogged-hidden");
-//   console.log(unloggedHidden);
-//   return !(localStorage.getItem("token") === null);
-// }
+// Verifier l'existence du token dans le local Storage
 
-// if (checkIfTokenExit()) {
-//   alert("Un token exist");
-// } else {
-//   alert("pas de token trouvé");
-// }
+const logout = document.querySelector(".logout");
+const unloggedHidden = document.querySelectorAll(".unlogged-hidden");
+const loggedHidden = document.querySelectorAll(".logged-hidden");
 
-//Pour la fonction logout il faut effacer les données de connexion dans le localStorage (token, id)
+logout.addEventListener("click", function () {
+  checkIfTokenExit();
+  window.localStorage.removeItem("token");
+  window.localStorage.removeItem("userId");
+  location.reload();
+});
+
+//Vérification de l'existence du Token
+function checkIfTokenExit() {
+  return !(localStorage.getItem("token") === null);
+}
+
+//Cacher éléments du DOM selon conection
+if (checkIfTokenExit()) {
+  for (var i = 0; i < loggedHidden.length; i++) {
+    loggedHidden[i].style.display = "none";
+  }
+} else {
+  for (var i = 0; i < unloggedHidden.length; i++) {
+    unloggedHidden[i].style.display = "none";
+  }
+}
