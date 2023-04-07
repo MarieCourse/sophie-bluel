@@ -1,6 +1,8 @@
 let allProjects = []; //Test pour acceder aux projects et filtrer
 
-const reponse = fetch("http://localhost:5678/api/works").then((res) => {
+const lienApi = "http://localhost:5678/api/works";
+
+const reponse = fetch(lienApi).then((res) => {
   // if(res.ok == true)
 
   if (res.ok) {
@@ -107,36 +109,57 @@ function worksFilter() {
 }
 
 //Visualisation de la boite modale
-let modal = null;
-const focusableSelector = "button, a, input, textarea";
+let modal1 = null;
+const focusableSelector = "button, a, input, select, textarea";
 let focusables = [];
 
 const openModal = function (e) {
   e.preventDefault();
-  modal = document.querySelector(e.target.getAttribute("href"));
-  focusables = Array.from(modal.querySelectorAll(focusableSelector));
-  modal.style.display = null;
-  modal.removeAttribute("aria-hidden");
-  modal.setAttribute("aria-modal", "true");
+  modal1 = document.querySelector(e.target.getAttribute("href"));
+  formHidden = document.querySelector(".form-hidden");
+  galleryHidden = document.querySelector(".gallery-hidden");
+
+  focusables = Array.from(modal1.querySelectorAll(focusableSelector));
+  modal1.style.display = null;
+  modal1.removeAttribute("aria-hidden");
+  modal1.setAttribute("aria-modal", "true");
+  formHidden.style.display = "none";
+
   //Appel function fermeture de la boite
-  modal.addEventListener("click", closeModal);
-  modal.querySelector(".close-modal").addEventListener("click", closeModal);
-  modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
+  modal1.addEventListener("click", closeModal);
+  modal1.querySelector(".close-modal").addEventListener("click", closeModal);
+  modal1
+    .querySelector(".modal-stop")
+    .addEventListener("click", stopPropagation);
+
+  //Visualisation de la modal "ajout photo"
+  const btnAjouterPhoto = document.querySelector(".gallery-hidden .btn-vert");
+  btnAjouterPhoto.addEventListener("click", function () {
+    galleryHidden.style.display = "none";
+    formHidden.style.display = null;
+  });
+
+  //Revenir à la modal "galerie"
+  const revenir = document.querySelector(".fa-arrow-left-long");
+  revenir.addEventListener("click", function () {
+    galleryHidden.style.display = null;
+    formHidden.style.display = "none";
+  });
 };
 
-//Function pour fermer de la boite modale
+//Function pour fermeture de la boite modale
 const closeModal = function (e) {
-  if (modal === null) return;
+  if (modal1 === null) return;
   e.preventDefault();
-  modal.style.display = "none";
-  modal.setAttribute("aria-hidden", "true");
-  modal.removeAttribute("aria-modal");
-  modal.removeEventListener("click", closeModal);
-  modal.querySelector(".close-modal").removeEventListener("click", closeModal);
-  modal
+  modal1.style.display = "none";
+  modal1.setAttribute("aria-hidden", "true");
+  modal1.removeAttribute("aria-modal");
+  modal1.removeEventListener("click", closeModal);
+  modal1.querySelector(".close-modal").removeEventListener("click", closeModal);
+  modal1
     .querySelector(".modal-stop")
     .removeEventListener("click", stopPropagation);
-  modal = null;
+  modal1 = null;
 };
 
 //Evite que la boite se ferme quand on click dessous
@@ -147,7 +170,7 @@ const stopPropagation = function (e) {
 //Tab sur les différents éléments de la modale
 const focusInModal = function (e) {
   e.preventDefault();
-  let index = focusables.findIndex((f) => f === modal.querySelector(":focus"));
+  let index = focusables.findIndex((f) => f === modal1.querySelector(":focus"));
   if (e.shiftKey === true) {
     index--;
   } else {
@@ -169,7 +192,7 @@ window.addEventListener("keydown", function (e) {
   if (e.key === "Escape" || e.key === "Esc") {
     closeModal(e);
   }
-  if (e.key === "Tab" && modal !== null) {
+  if (e.key === "Tab" && modal1 !== null) {
     focusInModal(e);
   }
 });
@@ -207,6 +230,25 @@ function genererWorksModal(works) {
     const figcaption = document.createElement("figcaption");
     figcaption.innerText = "éditer";
     figure.appendChild(figcaption);
+
+    //Delete un projet
+    trash.addEventListener("click", function () {
+      gallery.removeChild(figure);
+      id = article.id;
+      fetch(lienApi + "/" + id, {
+        method: "DELETE",
+        headers: {
+          Accept: "*/*",
+          Authorization: `Bearer ${window.localStorage.token}`,
+        },
+      }).then((res) => {
+        if (res.ok) {
+          alert("Le projet a été supprimé correctement");
+        } else {
+          alert("Le projet n'a pas pu etre supprimé");
+        }
+      });
+    });
   }
 }
 
@@ -238,3 +280,48 @@ if (checkIfTokenExit()) {
     unloggedHidden[i].style.display = "none";
   }
 }
+
+//Ajouter une nouvelle photo
+
+const btnAjouterFichier = document.querySelector(".form-hidden div button ");
+btnAjouterFichier.classList.add("file-input-button");
+
+const formElement = document.querySelector(".form-hidden form");
+
+formElement.addEventListener("submit", function () {
+  let formData = new FormData();
+
+  let newProjetImage = document.querySelector("#file").files[0];
+  let newProjetTitle = document.querySelector("#title").value;
+  let newProjetCategory = document.querySelector("#category").value;
+
+  formData.append("image", newProjetImage);
+  formData.append("title", newProjetTitle);
+  formData.append("category", newProjetCategory);
+
+  console.log(formData);
+
+  fetch(lienApi, {
+    method: "POST",
+    body: formData,
+    headers: {
+      //"Content-Type": "application/json",
+      Authorization: `Bearer ${window.localStorage.token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+//On cache le button par default de l'input "file"
+const inputFile = document.querySelector('input[type = "file"]');
+inputFile.style.display = "none";
+
+// let request = new XMLHttpRequest();
+// request.open("POST", "submitform.php");
+// request.send(new FormData(formElement));

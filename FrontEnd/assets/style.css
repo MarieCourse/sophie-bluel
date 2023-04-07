@@ -199,7 +199,7 @@ nav li a:active {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	margin-bottom: 3em;
+	margin: 3em auto;
 }
 
 #filtres button {
@@ -230,7 +230,7 @@ nav li a:active {
 }
 
 #contact h2, #login h2, #login a{
-	margin-bottom: 20px;
+	margin: 20px;
 	text-align: center;
 }
 #contact form {
@@ -240,19 +240,27 @@ nav li a:active {
 	flex-direction: column;
 }
 
-#name, #email, #password, #message {
+
+input, textarea, select {
 	border: none;
 	margin: 0.5em 0 2em 0;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);	font-size: 1.2em;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);	
+	font-size: 1.2em;
 }
 
-#name, #email, #password {
+#name, #email, #password, #title, #category  {
 	height: 50px;
 }
 
-.btn-vert{
-	color: white;
+.btn-vert {
 	background-color: #1D6154;
+}
+
+.btn-gris {
+	background-color: #A7A7A7;
+}
+.btn-vert, .btn-gris{
+	color: white;	
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 14px;
@@ -264,7 +272,7 @@ nav li a:active {
 	margin : auto ;
 }
 
-.modal-wrapper .btn-vert {
+.modal-wrapper .btn-vert, .modal-wrapper .btn-gris{
 	width: 237px;
 	margin: 38px 0 23px 0;
 }
@@ -272,8 +280,7 @@ nav li a:active {
 footer {
 	background-color: white;
 	width: 100%;
-	margin: auto;
-	max-width: 1140px;
+	margin: 0;
 	height: 60px;
 }
 
@@ -290,9 +297,11 @@ footer nav ul {
 #login {
 	margin-top: 150px;
 }
-#login form {
+#login form, #form-hidden form {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-items: center;
 }
 
 a:visited{
@@ -395,5 +404,51 @@ a:visited{
 	position: relative;
 	left: 35px;
 	bottom: 114px;
+}
+
+.form-hidden .fa-arrow-left-long {
+	position: relative;
+	right: 50px;
+	bottom: 25px;
+}
+.form-hidden input, select {
+	width: 420px;
+}
+
+.form-hidden form > div {
+	background-color: #E8F1F6;
+	width: 420px;
+	height: 169px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	padding: 20px;
+	margin: 36px 0 30px 0;
+
+}
+
+.form-hidden form > div > i {
+	color: #B9C5CC;
+ 	font-size: 50px;
+}
+
+.form-hidden form > div > button {
+	background-color: #CBD6DC;
+	height: 36px;
+	width: 173px;
+	border-radius: 50px;
+	color: #306685;
+	font-family: Work Sans;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16px;
+	text-align: center;
+	border: none;
+}
+
+.form-hidden form > div > p {
+	font-size: 10px;
+	color: #444444;
 }
 
