@@ -79,7 +79,7 @@
           <i class="fa-regular fa-pen-to-square"></i>
           modifier</a
         >
-        <!-- Création de la boite modale 1-->
+        <!-- Création des boites modales-->
         <aside
           id="modal1"
           class="modal"
@@ -90,6 +90,7 @@
         >
           <div class="modal-wrapper modal-stop">
             <i class="close-modal fa-solid fa-xmark"></i>
+            <!-- Création de la boite modale 1-->
             <div class="gallery-hidden">
               <h3 class="title-modal">Galerie photo</h3>
               <div id="galerie-modal"></div>
@@ -103,34 +104,23 @@
               <!-- Formulaire pour ajouter une nouvelle image -->
               <form enctype="multipart/form-data" method="post">
                 <!-- Button pour selectionner un fichier -->
-                <div>
-                  <i class="fa-sharp fa-regular fa-image"></i>
-                  <label for="file"></label>
-                  <input
-                    type="file"
-                    name="file"
-                    id="file"
-                    accept=".jpg, .jpeg, .png"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onclick="document.getElementById('file').click()"
-                  >
-                    + Ajouter photo
-                  </button>
-                  <p>jpg, png : 4mo max</p>
+                <div id="preview-image">
+                  <div class="preview-input">
+                    <i class="fa-sharp fa-regular fa-image"></i>
+                    <label for="file"></label>
+                    <input
+                      type="file"
+                      name="file"
+                      id="file"
+                      accept=".jpg, .jpeg, .png"
+                      required
+                    />
+                    <button type="button">+ Ajouter photo</button>
+                    <p>jpg, png : 4mo max</p>
+                  </div>
                 </div>
                 <!-- Reste du formulaire -->
-                <label for="title">Titre</label>
-                <input type="text" name="title" id="title" required />
-                <label for="category">Categorie</label>
-                <select name="category" id="category" required />
-                <option value="#"></option>
-                <option value="">Objets</option>
-                <option value="">Appartements</option>
-                <option value="">Hôtels & restaurants</option>
-                <input class="btn-gris" type="submit" value="Valider" />
+                <div id="form-modal"></div>
               </form>
             </div>
           </div>

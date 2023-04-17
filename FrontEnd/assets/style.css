@@ -252,6 +252,7 @@ input, textarea, select {
 	height: 50px;
 }
 
+
 .btn-vert {
 	background-color: #1D6154;
 }
@@ -411,11 +412,16 @@ a:visited{
 	right: 50px;
 	bottom: 25px;
 }
-.form-hidden input, select {
-	width: 420px;
+
+.gallery-hidden, .form-hidden {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
-.form-hidden form > div {
+
+#preview-image {
 	background-color: #E8F1F6;
 	width: 420px;
 	height: 169px;
@@ -425,15 +431,15 @@ a:visited{
 	justify-content: space-around;
 	padding: 20px;
 	margin: 36px 0 30px 0;
-
 }
 
-.form-hidden form > div > i {
+
+#preview-image i {
 	color: #B9C5CC;
- 	font-size: 50px;
+	font-size: 50px;
 }
 
-.form-hidden form > div > button {
+#preview-image button {
 	background-color: #CBD6DC;
 	height: 36px;
 	width: 173px;
@@ -447,8 +453,17 @@ a:visited{
 	border: none;
 }
 
-.form-hidden form > div > p {
+#preview-image p {
 	font-size: 10px;
 	color: #444444;
 }
+
+.form-hidden input, select {
+	width: 420px;
+}
+
+.nouvelle-image {
+	height: 169px;
+}
+
 

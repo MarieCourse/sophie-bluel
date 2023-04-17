@@ -12,6 +12,7 @@ const reponse = fetch(lienApi).then((res) => {
       genererWorks(data);
       genererCategories(data);
       genererWorksModal(data);
+      genererCategoriesModal(data);
     });
   } else {
     console.log(
@@ -281,14 +282,91 @@ if (checkIfTokenExit()) {
   }
 }
 
-//Ajouter une nouvelle photo
+//On cache le button par default de l'input "file"
+const inputFile = document.querySelector('input[type = "file"]');
+inputFile.style.display = "none";
 
-const btnAjouterFichier = document.querySelector(".form-hidden div button ");
-btnAjouterFichier.classList.add("file-input-button");
-
+//Création des balises pour le formulaire modal2
 const formElement = document.querySelector(".form-hidden form");
+const formModal = document.querySelector("#form-modal");
+//Balise Titre
+const labelTitle = document.createElement("label");
+labelTitle.innerText = "Titre";
+labelTitle.setAttribute("for", "title");
+const inputTitle = document.createElement("input");
+inputTitle.setAttribute("required", true);
+inputTitle.id = "title";
+inputTitle.name = "title";
+inputTitle.type = "text";
+formModal.appendChild(labelTitle);
+formModal.appendChild(inputTitle);
 
-formElement.addEventListener("submit", function () {
+//Balise Categorie
+const labelCategory = document.createElement("label");
+labelCategory.innerText = "Categorie";
+labelCategory.setAttribute("for", "category");
+const selectCategory = document.createElement("select");
+selectCategory.setAttribute("required", true);
+selectCategory.id = "category";
+selectCategory.name = "category";
+formModal.appendChild(labelCategory);
+formModal.appendChild(selectCategory);
+
+//Button Submit
+const buttonValider = document.createElement("input");
+buttonValider.classList.add("btn-gris");
+buttonValider.type = "button";
+buttonValider.value = "Valider";
+buttonValider.setAttribute("id", "validForm");
+formElement.appendChild(buttonValider); //
+
+//Récuperation des catégories depuis l'API
+function genererCategoriesModal(data) {
+  const categoriesSet = new Set();
+
+  for (let i = 0; i < data.length; i++) {
+    const currentCategorie = data[i].category.name;
+    let categoryId = data[i].category.id;
+    if (!categoriesSet.has(currentCategorie)) {
+      const option = document.createElement("option");
+      option.innerText = currentCategorie;
+      option.setAttribute("value", categoryId);
+      selectCategory.appendChild(option);
+      categoriesSet.add(currentCategorie);
+    }
+  }
+}
+
+//Ajouter une nouvelle photo
+//Utiliser le button pour choisir le fichier
+const btnAjouterFichier = document.querySelector(".form-hidden div button");
+btnAjouterFichier.classList.add("file-input-button");
+btnAjouterFichier.addEventListener("click", function () {
+  document.getElementById("file").click();
+});
+
+// Faire apparaitre l'image selectionnée
+const previewImage = document.querySelector("#preview-image");
+const inputImage = document.querySelector(".preview-input input");
+const previewInput = document.querySelector(".preview-input");
+
+inputImage.addEventListener("change", function () {
+  const image = inputImage.files[0];
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = new Image();
+    img.src = e.target.result;
+    img.classList.add("nouvelle-image");
+    previewImage.appendChild(img);
+  };
+  previewInput.style.display = "none";
+  reader.readAsDataURL(image);
+});
+
+//Recuperer les informations du formulaire
+document.getElementById("validForm").addEventListener("click", function (e) {
+  alert("ok");
   let formData = new FormData();
 
   let newProjetImage = document.querySelector("#file").files[0];
@@ -301,27 +379,26 @@ formElement.addEventListener("submit", function () {
 
   console.log(formData);
 
+  console.log(formData.get("image"));
+  console.log(formData.get("title"));
+  console.log(formData.get("category"));
+
+  //Envoyer la requete à l'API
   fetch(lienApi, {
     method: "POST",
     body: formData,
     headers: {
-      //"Content-Type": "application/json",
       Authorization: `Bearer ${window.localStorage.token}`,
     },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  }).then((res) => {
+    if (res.ok) {
+      return res.json().then((data) => {
+        alert("Le projet à été envoyé correctement");
+        console.log(data);
+      });
+    } else {
+      alert("Une erreur s'est produite");
+      console.log(res);
+    }
+  });
 });
-
-//On cache le button par default de l'input "file"
-const inputFile = document.querySelector('input[type = "file"]');
-inputFile.style.display = "none";
-
-// let request = new XMLHttpRequest();
-// request.open("POST", "submitform.php");
-// request.send(new FormData(formElement));
