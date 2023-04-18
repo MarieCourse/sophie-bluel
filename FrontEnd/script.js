@@ -245,6 +245,7 @@ function genererWorksModal(works) {
       }).then((res) => {
         if (res.ok) {
           alert("Le projet a été supprimé correctement");
+          location.reload();
         } else {
           alert("Le projet n'a pas pu etre supprimé");
         }
@@ -303,7 +304,7 @@ formModal.appendChild(inputTitle);
 
 //Balise Categorie
 const labelCategory = document.createElement("label");
-labelCategory.innerText = "Categorie";
+labelCategory.innerText = "Catégorie";
 labelCategory.setAttribute("for", "category");
 const selectCategory = document.createElement("select");
 selectCategory.setAttribute("required", true);
@@ -314,10 +315,11 @@ formModal.appendChild(selectCategory);
 
 //Button Submit
 const buttonValider = document.createElement("input");
-buttonValider.classList.add("btn-gris");
+buttonValider.classList.add("btn-vert");
 buttonValider.type = "button";
 buttonValider.value = "Valider";
-buttonValider.setAttribute("id", "validForm");
+buttonValider.disabled = true;
+buttonValider.setAttribute("id", "valid-form");
 formElement.appendChild(buttonValider); //
 
 //Récuperation des catégories depuis l'API
@@ -347,8 +349,8 @@ btnAjouterFichier.addEventListener("click", function () {
 
 // Faire apparaitre l'image selectionnée
 const previewImage = document.querySelector("#preview-image");
-const inputImage = document.querySelector(".preview-input input");
 const previewInput = document.querySelector(".preview-input");
+const inputImage = document.querySelector(".preview-input input");
 
 inputImage.addEventListener("change", function () {
   const image = inputImage.files[0];
@@ -364,9 +366,23 @@ inputImage.addEventListener("change", function () {
   reader.readAsDataURL(image);
 });
 
-//Recuperer les informations du formulaire
-document.getElementById("validForm").addEventListener("click", function (e) {
-  alert("ok");
+//Activer le button Valider quand le formulaire est rempli
+function verifierValidForm() {
+  if (
+    document.querySelector("#file").files.length === 0 ||
+    document.querySelector("#title").value === ""
+  ) {
+    buttonValider.disabled = true;
+  } else {
+    buttonValider.disabled = false;
+  }
+}
+
+document.querySelector("#file").addEventListener("change", verifierValidForm);
+document.querySelector("#title").addEventListener("input", verifierValidForm);
+
+buttonValider.addEventListener("click", function (e) {
+  e.preventDefault();
   let formData = new FormData();
 
   let newProjetImage = document.querySelector("#file").files[0];
@@ -394,6 +410,7 @@ document.getElementById("validForm").addEventListener("click", function (e) {
     if (res.ok) {
       return res.json().then((data) => {
         alert("Le projet à été envoyé correctement");
+        location.reload(); //La page s'actualise automatiquement pour afficher le nouveau projet
         console.log(data);
       });
     } else {

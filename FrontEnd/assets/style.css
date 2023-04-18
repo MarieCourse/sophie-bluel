@@ -250,30 +250,30 @@ input, textarea, select {
 
 #name, #email, #password, #title, #category  {
 	height: 50px;
+	font-family: 'work sans';
+	color: #444444;
+	font-size: 14px;
+	padding: 15px;
 }
-
 
 .btn-vert {
+	color: white;		
 	background-color: #1D6154;
-}
-
-.btn-gris {
-	background-color: #A7A7A7;
-}
-.btn-vert, .btn-gris{
-	color: white;	
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 14px;
 	height: 36px;
 	min-width: 180px;
-	text-align: center;
 	border-radius: 60px ;
     border: none;
 	margin : auto ;
 }
 
-.modal-wrapper .btn-vert, .modal-wrapper .btn-gris{
+#valid-form[disabled]{
+	background-color: #A7A7A7;
+}
+
+.modal-wrapper .btn-vert {
 	width: 237px;
 	margin: 38px 0 23px 0;
 }
@@ -298,7 +298,7 @@ footer nav ul {
 #login {
 	margin-top: 150px;
 }
-#login form, #form-hidden form {
+#login form {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -413,7 +413,7 @@ a:visited{
 	bottom: 25px;
 }
 
-.gallery-hidden, .form-hidden {
+.gallery-hidden {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -424,15 +424,22 @@ a:visited{
 #preview-image {
 	background-color: #E8F1F6;
 	width: 420px;
-	height: 169px;
+	height: 169px;	
+	margin: 36px 0 30px 0;
 	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.preview-input {
+	display: flex;
+	height: 100%;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
 	padding: 20px;
-	margin: 36px 0 30px 0;
-}
 
+}
 
 #preview-image i {
 	color: #B9C5CC;
@@ -458,12 +465,30 @@ a:visited{
 	color: #444444;
 }
 
-.form-hidden input, select {
+#title, #category {
 	width: 420px;
 }
 
 .nouvelle-image {
 	height: 169px;
 }
+
+#form-modal {
+	padding-bottom: 15px;
+    border-bottom: solid 1px #B3B3B3;
+	width: 420px;
+}
+
+#form-modal label {
+	color: #3D3D3D;
+}
+
+.form-hidden form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
 
 
