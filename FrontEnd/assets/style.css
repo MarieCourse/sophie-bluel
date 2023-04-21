@@ -62,7 +62,8 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
+	width: 100%;
 }
 
 section {
@@ -91,27 +92,32 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
+
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
+
 	
 }
 nav li {
-	padding: 0 10px;
+	padding: 0 25px;
 	font-size: 1.2em;
 }
 
-nav li a {
+a {
 	text-decoration: none;
-}
-li:hover {
-	color: #B1663C;
+	color: black;
 }
 
 nav li a:active {
 	color: black;
 	font-weight: bold;
+}
+
+nav img {
+	width: 19px;
 }
 
 #bandeau {
@@ -126,7 +132,8 @@ nav li a:active {
 	margin: 0;
 }
 
-.button-blanc {	font-family: 'Work Sans';
+.button-blanc {	
+	font-family: 'Work Sans';
 	font-style: normal;
 	font-weight: 500;
 	font-size: 14px;
@@ -137,6 +144,8 @@ nav li a:active {
 	padding: 9px 20px;
 	border-radius: 20px;
 	margin: 10px;
+	border: none;
+	cursor: pointer;
 
 }
 #introduction {
@@ -221,6 +230,10 @@ nav li a:active {
 	color: #FFFFFF;
 }
 
+figcaption {
+	margin-top: 5px;
+}
+
 #contact, #login {
 	width: 30%;
 	margin: auto;
@@ -269,6 +282,11 @@ input, textarea, select {
 	margin : auto ;
 }
 
+.btn-vert:hover {
+	background-color: #0E2F28;
+
+}
+
 #valid-form[disabled]{
 	background-color: #A7A7A7;
 }
@@ -279,6 +297,7 @@ input, textarea, select {
 }
 
 footer {
+	display: flex;
 	background-color: white;
 	width: 100%;
 	margin: 0;
@@ -301,7 +320,6 @@ footer nav ul {
 #login form {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-items: center;
 }
 
@@ -385,6 +403,7 @@ a:visited{
 	text-justify: center;
 	text-align: center;
 	padding: 4px;
+	cursor: pointer;
 }
 
 .modal-wrapper .fa-xmark {
@@ -393,6 +412,7 @@ a:visited{
 	position: relative;
 	left: 270px;
 	bottom: 10px;
+	cursor: pointer;
 }
 
 .modal-wrapper .fa-trash-can {
@@ -404,13 +424,14 @@ a:visited{
 .modal-wrapper .fa-arrows-up-down-left-right {
 	position: relative;
 	left: 35px;
-	bottom: 114px;
+	bottom: 119px;
 }
 
 .form-hidden .fa-arrow-left-long {
 	position: relative;
 	right: 50px;
 	bottom: 25px;
+	cursor: pointer;
 }
 
 .gallery-hidden {
@@ -427,6 +448,7 @@ a:visited{
 	height: 169px;	
 	margin: 36px 0 30px 0;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 }

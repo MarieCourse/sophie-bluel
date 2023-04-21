@@ -232,24 +232,26 @@ function genererWorksModal(works) {
     figcaption.innerText = "éditer";
     figure.appendChild(figcaption);
 
-    //Delete un projet
+    //Delete d'un projet
     trash.addEventListener("click", function () {
-      gallery.removeChild(figure);
-      id = article.id;
-      fetch(lienApi + "/" + id, {
-        method: "DELETE",
-        headers: {
-          Accept: "*/*",
-          Authorization: `Bearer ${window.localStorage.token}`,
-        },
-      }).then((res) => {
-        if (res.ok) {
-          alert("Le projet a été supprimé correctement");
-          location.reload();
-        } else {
-          alert("Le projet n'a pas pu etre supprimé");
-        }
-      });
+      if (confirm("Êtes-vous sûr de vouloir supprimer le projet?")) {
+        gallery.removeChild(figure);
+        id = article.id;
+        fetch(lienApi + "/" + id, {
+          method: "DELETE",
+          headers: {
+            Accept: "*/*",
+            Authorization: `Bearer ${window.localStorage.token}`,
+          },
+        }).then((res) => {
+          if (res.ok) {
+            alert("Le projet a été supprimé correctement");
+            location.reload();
+          } else {
+            alert("Le projet n'a pas pu etre supprimé. Veuillez réessayer");
+          }
+        });
+      }
     });
   }
 }
@@ -267,7 +269,7 @@ logout.addEventListener("click", function () {
   location.reload();
 });
 
-//Vérification de l'existence du Token
+//Function pour vérifier l'existence du Token
 function checkIfTokenExit() {
   return !(localStorage.getItem("token") === null);
 }
@@ -302,7 +304,7 @@ inputTitle.type = "text";
 formModal.appendChild(labelTitle);
 formModal.appendChild(inputTitle);
 
-//Balise Categorie
+//Ajout de la balise Categorie
 const labelCategory = document.createElement("label");
 labelCategory.innerText = "Catégorie";
 labelCategory.setAttribute("for", "category");
@@ -313,7 +315,7 @@ selectCategory.name = "category";
 formModal.appendChild(labelCategory);
 formModal.appendChild(selectCategory);
 
-//Button Submit
+//Ajout du button Submit
 const buttonValider = document.createElement("input");
 buttonValider.classList.add("btn-vert");
 buttonValider.type = "button";
@@ -340,30 +342,64 @@ function genererCategoriesModal(data) {
 }
 
 //Ajouter une nouvelle photo
-//Utiliser le button pour choisir le fichier
-const btnAjouterFichier = document.querySelector(".form-hidden div button");
-btnAjouterFichier.classList.add("file-input-button");
-btnAjouterFichier.addEventListener("click", function () {
-  document.getElementById("file").click();
-});
-
-// Faire apparaitre l'image selectionnée
+//Container button + image
 const previewImage = document.querySelector("#preview-image");
+//Container button et icone pour selectionner le fichier
 const previewInput = document.querySelector(".preview-input");
 const inputImage = document.querySelector(".preview-input input");
 
+//Utiliser le container pour choisir le fichier
+previewInput.addEventListener("click", function () {
+  document.getElementById("file").click();
+});
+
+// const btnAjouterFichier = document.querySelector(".form-hidden div button");
+// btnAjouterFichier.classList.add("file-input-button");
+// btnAjouterFichier.addEventListener("click", function () {
+//   document.getElementById("file").click();
+// });
+
+// Faire apparaitre l'image selectionnée
 inputImage.addEventListener("change", function () {
   const image = inputImage.files[0];
-
   const reader = new FileReader();
-  reader.onload = function (e) {
-    const img = new Image();
-    img.src = e.target.result;
-    img.classList.add("nouvelle-image");
-    previewImage.appendChild(img);
-  };
-  previewInput.style.display = "none";
-  reader.readAsDataURL(image);
+  //Vérification de la taille de fichier
+  const fileSize = image.size;
+  const maxSize = 4 * 1024 * 1024;
+
+  if (fileSize > maxSize) {
+    alert(
+      "Le fichier sélectionné est trop volumineux. Le poids maximum autorisé est de 4 Mo"
+    );
+    inputImage.value = "";
+  }
+  if ((image.type !== ".jpg", ".jpeg", ".png")) {
+    alert(
+      "Le format de fichier choisi n'est pas autorisé. Veuillez choisir un fichier en format .JPG, .JPEG ou .PNG"
+    );
+    inputImage.value = "";
+  } else {
+    reader.onload = function (e) {
+      const img = new Image();
+      img.src = e.target.result;
+      img.classList.add("nouvelle-image");
+
+      // Supprime l'ancienne image de la zone d'aperçu
+      const ancienneImage = document.querySelector(".nouvelle-image");
+      if (ancienneImage) {
+        ancienneImage.remove();
+      }
+
+      previewImage.appendChild(img);
+    };
+    //On cache le button mais reste cliquable
+    previewImage.style.position = "relative";
+    previewInput.style.position = "absolute";
+    previewInput.style.opacity = "0";
+    previewInput.style.zIndex = "1";
+
+    reader.readAsDataURL(image);
+  }
 });
 
 //Activer le button Valider quand le formulaire est rempli
@@ -411,7 +447,6 @@ buttonValider.addEventListener("click", function (e) {
       return res.json().then((data) => {
         alert("Le projet à été envoyé correctement");
         location.reload(); //La page s'actualise automatiquement pour afficher le nouveau projet
-        console.log(data);
       });
     } else {
       alert("Une erreur s'est produite");
