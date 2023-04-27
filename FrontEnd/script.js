@@ -1,29 +1,26 @@
 let allProjects = []; //Test pour acceder aux projects et filtrer
 
-const lienApi = "http://localhost:5678/api/works";
+const linkApi = "http://localhost:5678/api/works";
 
-const reponse = fetch(lienApi).then((res) => {
-  // if(res.ok == true)
-
+const response = fetch(linkApi).then((res) => {
   if (res.ok) {
     return res.json().then(function (data) {
       allProjects = data; //Réutiliser pour le filtre Tous
-      //console.log(allProjects);
-      genererWorks(data);
-      genererCategories(data);
-      genererWorksModal(data);
-      genererCategoriesModal(data);
+      generateWorks(data);
+      generateCategories(data);
+      generateWorksModal(data);
+      generateCategoriesModal(data);
     });
   } else {
     returnToLogin(res.status);
     console.log(
-      "Erreur de conection avec le serveur - Impossible d'afficher les projects"
+      "Erreur de connexion avec le serveur - Impossible d'afficher les projects"
     );
   }
 });
 
 //Création des buttons de filtrage
-function genererCategories(data) {
+function generateCategories(data) {
   const categoriesSet = new Set();
   const categories = document.querySelector("#filtres");
 
@@ -34,17 +31,6 @@ function genererCategories(data) {
   categories.appendChild(btnTous);
 
   //Création des autres buttons
-  //Avec cette méthode les boutons se creent plusieurs fois
-
-  /*
-  for (let i = 0; i < data.length; i++) {
-    let currentButton = document.createElement("button");
-    currentButton.innerText = data[i].category.name;
-    currentButton.setAttribute("class", "filter");
-    categories.appendChild(currentButton);
-  }
-  */
-
   for (let i = 0; i < data.length; i++) {
     const currentCategorie = data[i].category.name;
     if (!categoriesSet.has(currentCategorie)) {
@@ -58,7 +44,7 @@ function genererCategories(data) {
 }
 
 //Génération des projets à afficher
-function genererWorks(works) {
+function generateWorks(works) {
   // Récupération de l'élément du DOM qui accueillera les fiches
   const gallery = document.querySelector(".gallery");
   gallery.innerHTML = "";
@@ -86,7 +72,7 @@ setTimeout(() => {
   worksFilter();
 }, "500");
 
-//Filter les works en fonction du nom
+//Filtrer les works en fonction du nom
 function worksFilter() {
   //Je récupère tous les filtres
   let filters = document.getElementsByClassName("filter");
@@ -107,17 +93,48 @@ function worksFilter() {
       console.log(filteredProjects);
       const gallery = document.querySelector(".gallery");
       gallery.innerHTML = "";
-      genererWorks(filteredProjects);
+      generateWorks(filteredProjects);
     });
   }
 }
 
-//Visualisation de la boite modale
+// Verifier l'existence du token dans le local Storage
+
+const logout = document.querySelector(".logout");
+const unloggedHidden = document.querySelectorAll(".unlogged-hidden");
+const loggedHidden = document.querySelectorAll(".logged-hidden");
+
+logout.addEventListener("click", function () {
+  checkIfTokenExit();
+  window.localStorage.removeItem("token");
+  window.localStorage.removeItem("userId");
+  location.reload();
+});
+
+//Function pour vérifier l'existence du Token
+function checkIfTokenExit() {
+  return !(localStorage.getItem("token") === null);
+}
+
+//Cacher éléments du DOM selon conection
+if (checkIfTokenExit()) {
+  for (var i = 0; i < loggedHidden.length; i++) {
+    loggedHidden[i].style.display = "none";
+  }
+} else {
+  for (var i = 0; i < unloggedHidden.length; i++) {
+    unloggedHidden[i].style.display = "none";
+  }
+}
+
+//Visualisation des boites modales
 let modal1 = null;
 const focusableSelector = "button, a, input, select, textarea";
 let focusables = [];
-formHidden = document.querySelector(".form-hidden");
+//Modal 1 (Galerie)
 galleryHidden = document.querySelector(".gallery-hidden");
+//Modal 2 (Formulaire)
+formHidden = document.querySelector(".form-hidden");
 
 const openModal = function (e) {
   e.preventDefault();
@@ -136,15 +153,15 @@ const openModal = function (e) {
     .querySelector(".modal-stop")
     .addEventListener("click", stopPropagation);
 
-  //Visualisation de la modal "ajout photo"
-  const btnAjouterPhoto = document.querySelector(".gallery-hidden .btn-vert");
-  btnAjouterPhoto.addEventListener("click", function () {
-    afficherModal2();
+  //Visualisation de la modal 2 (Formulaire)
+  const buttonAddPhoto = document.querySelector(".gallery-hidden .btn-vert");
+  buttonAddPhoto.addEventListener("click", function () {
+    displayModal2();
   });
 
-  //Revenir à la modal "galerie"
-  const revenir = document.querySelector(".fa-arrow-left-long");
-  revenir.addEventListener("click", function () {
+  //Revenir à la modal 1 (galerie)
+  const goBack = document.querySelector(".fa-arrow-left-long");
+  goBack.addEventListener("click", function () {
     // Réinitialiser les valeurs
     if (inputTitle || selectCategory) {
       inputTitle.value = "";
@@ -158,16 +175,16 @@ const openModal = function (e) {
     }
 
     // Appel a function afficher la modal 1 et cacher la modal 2
-    afficherModal1();
+    displayModal1();
   });
 };
 
-function afficherModal1() {
+function displayModal1() {
   galleryHidden.style.display = null;
   formHidden.style.display = "none";
 }
 
-function afficherModal2() {
+function displayModal2() {
   galleryHidden.style.display = "none";
   formHidden.style.display = null;
 }
@@ -210,6 +227,7 @@ const focusInModal = function (e) {
   focusables[index].focus();
 };
 
+//Ouverture de la modal
 document.querySelector(".open-modal").addEventListener("click", openModal);
 
 //Fermeture de la boite avec la touche Escape
@@ -222,9 +240,10 @@ window.addEventListener("keydown", function (e) {
   }
 });
 
-//Creation de galerie dans la boite modale
-function genererWorksModal(works) {
-  const galleryModal = document.querySelector("#galerie-modal");
+//Création de la galerie dans la boite modale
+const galleryModal = document.querySelector("#galerie-modal");
+
+function generateWorksModal(works) {
   galleryModal.innerHTML = "";
   for (let i = 0; i < works.length; i++) {
     const article = works[i];
@@ -257,12 +276,11 @@ function genererWorksModal(works) {
     figure.appendChild(figcaption);
 
     //Delete d'un projet
-
     trash.addEventListener("click", function () {
       if (confirm("Êtes-vous sûr de vouloir supprimer le projet?")) {
         galleryModal.removeChild(figure);
-        let id = article.id;
-        fetch(lienApi + "/" + id, {
+        let id = works[i].id;
+        fetch(linkApi + "/" + id, {
           method: "DELETE",
           headers: {
             Accept: "*/*",
@@ -271,7 +289,10 @@ function genererWorksModal(works) {
         }).then((res) => {
           console.log(res);
           if (res.ok) {
-            genererWorksModal(works);
+            // Mettre à jour le tableau "works" en supprimant le projet
+            works.splice(i, 1);
+            generateWorksModal(works);
+            generateWorks(works);
           } else {
             returnToLogin(res.status);
             alert("Le projet n'a pas pu etre supprimé. Veuillez réessayer");
@@ -279,35 +300,6 @@ function genererWorksModal(works) {
         });
       }
     });
-  }
-}
-
-// Verifier l'existence du token dans le local Storage
-
-const logout = document.querySelector(".logout");
-const unloggedHidden = document.querySelectorAll(".unlogged-hidden");
-const loggedHidden = document.querySelectorAll(".logged-hidden");
-
-logout.addEventListener("click", function () {
-  checkIfTokenExit();
-  window.localStorage.removeItem("token");
-  window.localStorage.removeItem("userId");
-  location.reload();
-});
-
-//Function pour vérifier l'existence du Token
-function checkIfTokenExit() {
-  return !(localStorage.getItem("token") === null);
-}
-
-//Cacher éléments du DOM selon conection
-if (checkIfTokenExit()) {
-  for (var i = 0; i < loggedHidden.length; i++) {
-    loggedHidden[i].style.display = "none";
-  }
-} else {
-  for (var i = 0; i < unloggedHidden.length; i++) {
-    unloggedHidden[i].style.display = "none";
   }
 }
 
@@ -351,7 +343,7 @@ buttonValider.setAttribute("id", "valid-form");
 formElement.appendChild(buttonValider); //
 
 //Récuperation des catégories depuis l'API
-function genererCategoriesModal(data) {
+function generateCategoriesModal(data) {
   const categoriesSet = new Set();
 
   for (let i = 0; i < data.length; i++) {
@@ -461,7 +453,7 @@ buttonValider.addEventListener("click", function (e) {
   console.log(formData.get("category"));
 
   //Envoyer la requete à l'API
-  fetch(lienApi, {
+  fetch(linkApi, {
     method: "POST",
     body: formData,
     headers: {
@@ -471,7 +463,7 @@ buttonValider.addEventListener("click", function (e) {
     console.log(res);
     if (res.ok) {
       return res.json().then((data) => {
-        afficherModal1();
+        displayModal1();
       });
     } else {
       returnToLogin(res.status);
