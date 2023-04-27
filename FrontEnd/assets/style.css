@@ -511,6 +511,10 @@ a:visited{
 	align-items: center;
 }
 
+.error-message p {
+	color: red;
+}
+
 
 
 

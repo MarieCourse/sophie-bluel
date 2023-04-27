@@ -15,6 +15,7 @@ const reponse = fetch(lienApi).then((res) => {
       genererCategoriesModal(data);
     });
   } else {
+    returnToLogin(res.status);
     console.log(
       "Erreur de conection avec le serveur - Impossible d'afficher les projects"
     );
@@ -58,11 +59,13 @@ function genererCategories(data) {
 
 //Génération des projets à afficher
 function genererWorks(works) {
+  // Récupération de l'élément du DOM qui accueillera les fiches
+  const gallery = document.querySelector(".gallery");
+  gallery.innerHTML = "";
+
   for (let i = 0; i < works.length; i++) {
     const article = works[i];
 
-    // Récupération de l'élément du DOM qui accueillera les fiches
-    const gallery = document.querySelector(".gallery");
     // Création d’une balise dédiée à un projet
     const figure = document.createElement("figure");
     gallery.appendChild(figure);
@@ -113,12 +116,12 @@ function worksFilter() {
 let modal1 = null;
 const focusableSelector = "button, a, input, select, textarea";
 let focusables = [];
+formHidden = document.querySelector(".form-hidden");
+galleryHidden = document.querySelector(".gallery-hidden");
 
 const openModal = function (e) {
   e.preventDefault();
   modal1 = document.querySelector(e.target.getAttribute("href"));
-  formHidden = document.querySelector(".form-hidden");
-  galleryHidden = document.querySelector(".gallery-hidden");
 
   focusables = Array.from(modal1.querySelectorAll(focusableSelector));
   modal1.style.display = null;
@@ -136,17 +139,38 @@ const openModal = function (e) {
   //Visualisation de la modal "ajout photo"
   const btnAjouterPhoto = document.querySelector(".gallery-hidden .btn-vert");
   btnAjouterPhoto.addEventListener("click", function () {
-    galleryHidden.style.display = "none";
-    formHidden.style.display = null;
+    afficherModal2();
   });
 
   //Revenir à la modal "galerie"
   const revenir = document.querySelector(".fa-arrow-left-long");
   revenir.addEventListener("click", function () {
-    galleryHidden.style.display = null;
-    formHidden.style.display = "none";
+    // Réinitialiser les valeurs
+    if (inputTitle || selectCategory) {
+      inputTitle.value = "";
+      previewInput.style.opacity = "1";
+      selectCategory.value = "";
+    }
+
+    // Cacher le preview de l'image
+    if (document.querySelector(".nouvelle-image")) {
+      document.querySelector(".nouvelle-image").style.display = "none";
+    }
+
+    // Appel a function afficher la modal 1 et cacher la modal 2
+    afficherModal1();
   });
 };
+
+function afficherModal1() {
+  galleryHidden.style.display = null;
+  formHidden.style.display = "none";
+}
+
+function afficherModal2() {
+  galleryHidden.style.display = "none";
+  formHidden.style.display = null;
+}
 
 //Function pour fermeture de la boite modale
 const closeModal = function (e) {
@@ -200,13 +224,13 @@ window.addEventListener("keydown", function (e) {
 
 //Creation de galerie dans la boite modale
 function genererWorksModal(works) {
+  const galleryModal = document.querySelector("#galerie-modal");
+  galleryModal.innerHTML = "";
   for (let i = 0; i < works.length; i++) {
     const article = works[i];
 
-    const gallery = document.querySelector("#galerie-modal");
-
     const figure = document.createElement("figure");
-    gallery.appendChild(figure);
+    galleryModal.appendChild(figure);
 
     const trash = document.createElement("i");
     trash.className = "fa-regular fa-trash-can";
@@ -233,10 +257,11 @@ function genererWorksModal(works) {
     figure.appendChild(figcaption);
 
     //Delete d'un projet
+
     trash.addEventListener("click", function () {
       if (confirm("Êtes-vous sûr de vouloir supprimer le projet?")) {
-        gallery.removeChild(figure);
-        id = article.id;
+        galleryModal.removeChild(figure);
+        let id = article.id;
         fetch(lienApi + "/" + id, {
           method: "DELETE",
           headers: {
@@ -244,10 +269,11 @@ function genererWorksModal(works) {
             Authorization: `Bearer ${window.localStorage.token}`,
           },
         }).then((res) => {
+          console.log(res);
           if (res.ok) {
-            alert("Le projet a été supprimé correctement");
-            location.reload();
+            genererWorksModal(works);
           } else {
+            returnToLogin(res.status);
             alert("Le projet n'a pas pu etre supprimé. Veuillez réessayer");
           }
         });
@@ -353,12 +379,6 @@ previewInput.addEventListener("click", function () {
   document.getElementById("file").click();
 });
 
-// const btnAjouterFichier = document.querySelector(".form-hidden div button");
-// btnAjouterFichier.classList.add("file-input-button");
-// btnAjouterFichier.addEventListener("click", function () {
-//   document.getElementById("file").click();
-// });
-
 // Faire apparaitre l'image selectionnée
 inputImage.addEventListener("change", function () {
   const image = inputImage.files[0];
@@ -373,7 +393,8 @@ inputImage.addEventListener("change", function () {
     );
     inputImage.value = "";
   }
-  if ((image.type !== ".jpg", ".jpeg", ".png")) {
+  let allowedExtension = ["image/png", "image/jpeg", "image/jpg"];
+  if (!allowedExtension.includes(image.type)) {
     alert(
       "Le format de fichier choisi n'est pas autorisé. Veuillez choisir un fichier en format .JPG, .JPEG ou .PNG"
     );
@@ -406,7 +427,8 @@ inputImage.addEventListener("change", function () {
 function verifierValidForm() {
   if (
     document.querySelector("#file").files.length === 0 ||
-    document.querySelector("#title").value === ""
+    document.querySelector("#title").value === "" ||
+    document.querySelector("#category").value === ""
   ) {
     buttonValider.disabled = true;
   } else {
@@ -416,6 +438,9 @@ function verifierValidForm() {
 
 document.querySelector("#file").addEventListener("change", verifierValidForm);
 document.querySelector("#title").addEventListener("input", verifierValidForm);
+document
+  .querySelector("#category")
+  .addEventListener("change", verifierValidForm);
 
 buttonValider.addEventListener("click", function (e) {
   e.preventDefault();
@@ -443,14 +468,22 @@ buttonValider.addEventListener("click", function (e) {
       Authorization: `Bearer ${window.localStorage.token}`,
     },
   }).then((res) => {
+    console.log(res);
     if (res.ok) {
       return res.json().then((data) => {
-        alert("Le projet à été envoyé correctement");
-        location.reload(); //La page s'actualise automatiquement pour afficher le nouveau projet
+        afficherModal1();
       });
     } else {
+      returnToLogin(res.status);
       alert("Une erreur s'est produite");
       console.log(res);
     }
   });
 });
+
+function returnToLogin(errorCode) {
+  if (errorCode == 401) {
+    alert("Veuillez vous reconecter");
+    document.location = "./login.html";
+  }
+}

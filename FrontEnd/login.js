@@ -14,23 +14,27 @@
   password.addEventListener("input", (e) => {
     passwordData = e.target.value;
   });
-*/
+  */
 
 //J'ajoute event au submit du form
 function submitForm() {
   const form = document.querySelector("form");
+  const errorMessage = document.querySelector(".error-message");
+  errorMessage.style.display = "none";
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const lien = "http://localhost:5678/api/users/login";
-    let userEmail = document.getElementById("email").value;
+    //let userEmail = document.getElementById("email").value;
+    //let userPassword = document.getElementById("password").value;
 
-    let userPassword = document.getElementById("password").value;
+    const inputPassword = document.getElementById("password");
+    const inputEmail = document.getElementById("email");
 
     //Création de l'objet utilisateur
     let utilisateur = {
-      email: userEmail,
-      password: userPassword,
+      email: inputEmail.value,
+      password: inputPassword.value,
     };
 
     //Création de la charge utile au format Json
@@ -54,7 +58,11 @@ function submitForm() {
           window.location = "./index.html";
         });
       } else {
-        alert("Erreur dans l’identifiant ou le mot de passe");
+        errorMessage.style.display = null;
+
+        inputEmail.addEventListener("click", function () {
+          errorMessage.style.display = "none";
+        });
       }
     });
   });
