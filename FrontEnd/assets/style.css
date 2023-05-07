@@ -31,8 +31,8 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	background-color: #FFFEF8;
-	;
 }
+
 ol, ul {
 	list-style: none;
 }
@@ -55,10 +55,11 @@ table {
 /** end reset css**/
 body {
 	max-width: 1140px;
-	margin:auto;
+	margin: auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -93,14 +94,12 @@ h2{
 	color: #1D6154
 }
 
-
 nav ul {
 	display: flex;
 	align-items: center;
-	list-style-type: none;
-
-	
+	list-style-type: none;	
 }
+
 nav li {
 	padding: 0 25px;
 	font-size: 1.2em;
@@ -146,8 +145,8 @@ nav img {
 	margin: 10px;
 	border: none;
 	cursor: pointer;
-
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -181,14 +180,22 @@ nav img {
 	margin-bottom: 0.5em;
 }
 
-#portfolio h2 {
-	text-align: center;
+
+#portfolio > div:first-child {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+    justify-content: center;
+    gap: 0 20px;
+    margin: 10px 0;
 }
 
+#portfolio h2 {
+	text-align: center;
+	order: 2;
+}
 #portfolio .modifier {
-	position: relative;
-    top: -35px;
-    right: -700px;
+	order: 3;
 }
 
 .gallery {
@@ -209,6 +216,7 @@ nav img {
 	flex-direction: row;
 	justify-content: center;
 	margin: 3em auto;
+	flex-wrap: wrap;
 }
 
 #filtres button {
@@ -302,6 +310,7 @@ footer {
 	width: 100%;
 	margin: 0;
 	height: 60px;
+    justify-content: right;
 }
 
 footer nav ul {
@@ -515,6 +524,94 @@ a:visited{
 	color: red;
 }
 
+/*Media Queries Tablette*/
 
+@media screen and (min-width: 768px) and (max-width: 991px){
+	body {
+		max-width: 991px;
+		width: 90%;
+		margin: auto;
+		padding: 0;
+		font-size: 80%;
+	}
+
+	#contact, #login {
+		width: 50%;
+	}
+}
+
+/*Media Queries Mobile*/   
+@media screen and (max-width: 767px){
+	body {
+		max-width: 767px;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		font-size: 80%;
+	}
+
+	header {
+		flex-direction: column;
+		margin: 0;
+	}		
+	
+	h1 {
+		align-items: center;
+		margin: 20px 0;
+	}
+	
+	nav ul {
+		justify-content: center;
+		width: 100%;
+	}
+	
+	nav li{
+		justify-content: space-around;
+	}
+
+	main {
+		margin: 0;
+	}
+	
+	section {
+		margin: 20px auto;
+		width: 90%;
+	}
+
+	#introduction {
+		flex-direction: column;
+	}
+	
+	#introduction figure {
+		margin: 10px auto;
+		width: 100%;
+	}
+	
+	#introduction h2, #introduction p {
+		margin-bottom: 0.5em;
+  	}
+  
+
+	/* Title + Filtres + Gallerie */
+	#portfolio > div:first-child { 
+		flex-direction: column;
+		align-items: center;
+	}
+
+	#filtres button {
+		font-size: 14px;
+	}
+
+	.gallery {
+		grid-template-columns: 1fr;
+	}
+
+	#contact, #login {
+		width: 70%;
+	}
+
+
+
+}
 
 

@@ -29,11 +29,13 @@
   </div>
   <body>
     <header>
-      <h1>Sophie Bluel <span>ARCHITECTE D'INTÉRIEUR</span></h1>
+      <a href="./index.html"
+        ><h1>Sophie Bluel <span>ARCHITECTE D'INTÉRIEUR</span></h1></a
+      >
       <nav>
         <ul>
-          <li><a href="#">projets</a></li>
-          <li><a href="#">contact</a></li>
+          <li><a href="#portfolio">projets</a></li>
+          <li><a href="#contact">contact</a></li>
           <li class="logged-hidden"><a href="./login.html">login</a></li>
           <li class="unlogged-hidden logout"><a href="#">logout</a></li>
           <li>
@@ -74,18 +76,19 @@
             En cas de besoin, une équipe pluridisciplinaire peut-être constituée
             : architecte DPLG, décorateur(trice)
           </p>
-          title
         </article>
       </section>
       <section id="portfolio">
-        <h2>Mes Projets</h2>
-        <a href="#modal1" class="unlogged-hidden modifier open-modal">
-          <i class="fa-regular fa-pen-to-square"></i>
-          modifier</a
-        >
+        <div>
+          <h2>Mes Projets</h2>
+          <a href="#modal" class="unlogged-hidden modifier open-modal">
+            <i class="fa-regular fa-pen-to-square"></i>
+            modifier</a
+          >
+        </div>
         <!-- Création des boites modales-->
         <aside
-          id="modal1"
+          id="modal"
           class="modal"
           aria-hidden="true"
           role="dialog"
