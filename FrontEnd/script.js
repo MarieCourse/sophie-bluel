@@ -12,24 +12,10 @@ getWorks()
   })
   .catch((error) => {
     // document.location = "./login.html";
-    console.log("Erreur de connexion avec le serveur");
+    console.log(
+      "Erreur de connexion avec le serveur, Veuillez vérifier l'état du serveur"
+    );
   });
-
-/*
-const response = fetch(linkApi).then((res) => {
-  if (res.ok) {
-    return res.json().then(function (data) {
-      allProjects = data; //Réutiliser pour le filtre Tous
-      generateWorks(data);
-      generateCategories(data);
-      generateWorksModal(data);
-      generateCategoriesModal(data);
-    });
-  } else {
-    returnToLogin(res.status);
-   console.log("Erreur de connexion avec le serveur");
-  }
-});*/
 
 //Création des buttons de filtrage
 function generateCategories(data) {
@@ -61,29 +47,9 @@ function generateCategories(data) {
   - Récuperer tous les Works
   - Affiche les données dans le DOM
 */
-function generateWorks() {
+function generateWorks(works) {
   getWorks().then((works) => {
-    // Récupération de l'élément du DOM qui accueillera les fiches
-    const gallery = document.querySelector(".gallery");
-    gallery.innerHTML = "";
-
-    for (let i = 0; i < works.length; i++) {
-      const article = works[i];
-
-      // Création d’une balise dédiée à un projet
-      const figure = document.createElement("figure");
-      gallery.appendChild(figure);
-      //Création des balises
-      const imageElement = document.createElement("img");
-      imageElement.src = article.imageUrl;
-      imageElement.alt = article.title;
-      figure.appendChild(imageElement);
-
-      //Création de l'élement figcaption
-      const figcaption = document.createElement("figcaption");
-      figcaption.innerText = article.title;
-      figure.appendChild(figcaption);
-    }
+    displayGivenWorks(works);
   });
 }
 
@@ -97,7 +63,6 @@ function worksFilter() {
   let filters = document.getElementsByClassName("filter");
   for (let i = 0; i < filters.length; i++) {
     filters[i].addEventListener("click", () => {
-      console.log(filters[i]);
       let currentFilterName = filters[i].innerText;
 
       let filteredProjects = [];
@@ -105,15 +70,10 @@ function worksFilter() {
         filteredProjects = allProjects;
       } else {
         filteredProjects = allProjects.filter((work) => {
-          console.log(currentFilterName);
           return work.category.name === currentFilterName;
         });
       }
-
-      console.log(filteredProjects);
-      const gallery = document.querySelector(".gallery");
-      gallery.innerHTML = "";
-      generateWorks(filteredProjects);
+      displayGivenWorks(filteredProjects);
     });
   }
 }
@@ -157,14 +117,10 @@ galleryHidden = document.querySelector(".gallery-hidden");
 //Modal 2 (Formulaire)
 formHidden = document.querySelector(".form-hidden");
 const modales = "galleryHidden, formHidden";
-console.log(galleryHidden);
-console.log(formHidden);
-console.log(modales);
 
 const openModal = function (e) {
   e.preventDefault();
   modal = document.querySelector(e.target.getAttribute("href"));
-  console.log(modal);
   focusables = Array.from(modal.querySelectorAll(focusableSelector));
   modal.style.display = null;
   modal.removeAttribute("aria-hidden");
@@ -179,7 +135,7 @@ const openModal = function (e) {
   //Visualisation de la modal 2 (Formulaire)
   const buttonAddPhoto = document.querySelector(".gallery-hidden .btn-vert");
   buttonAddPhoto.addEventListener("click", function () {
-    displayModal2();
+    displayModalFormulaireAjout();
   });
 
   //Revenir à la modal 1 (galerie)
@@ -194,16 +150,16 @@ const openModal = function (e) {
     }
 
     // Appel a function afficher la modal 1 et cacher la modal 2
-    displayModal1();
+    displayModalGalerie();
   });
 };
 
-function displayModal1() {
+function displayModalGalerie() {
   galleryHidden.style.display = null;
   formHidden.style.display = "none";
 }
 
-function displayModal2() {
+function displayModalFormulaireAjout() {
   galleryHidden.style.display = "none";
   formHidden.style.display = null;
 }
@@ -213,7 +169,7 @@ const closeModal = function (e) {
   if (modal === null) return;
   e.preventDefault();
   viderInputsValues();
-  displayModal1();
+  displayModalGalerie();
   modal.style.display = "none";
   modal.setAttribute("aria-hidden", "true");
   modal.removeAttribute("aria-modal");
@@ -297,15 +253,12 @@ function generateWorksModal() {
         expand.className = "fa-solid fa-arrows-up-down-left-right";
         figure.appendChild(expand);
       });
-
       image.addEventListener("pointerout", function () {
         figure.removeChild(expand);
       });
-
       const figcaption = document.createElement("figcaption");
       figcaption.innerText = "éditer";
       figure.appendChild(figcaption);
-
       trash.addEventListener("click", function () {
         if (confirm("Êtes-vous sûr de vouloir supprimer le projet?")) {
           galleryModal.removeChild(figure);
@@ -317,7 +270,6 @@ function generateWorksModal() {
               Authorization: `Bearer ${window.localStorage.token}`,
             },
           }).then((res) => {
-            console.log(res);
             if (res.ok) {
               // Mettre à jour le tableau "works" en supprimant le projet
               works.splice(i, 1);
@@ -479,11 +431,6 @@ submitButton.addEventListener("click", function (e) {
   formData.append("title", newProjetTitle);
   formData.append("category", newProjetCategory);
 
-  console.log(formData);
-  console.log(formData.get("image"));
-  console.log(formData.get("title"));
-  console.log(formData.get("category"));
-
   //Envoyer la requete à l'API
   fetch(linkApi, {
     method: "POST",
@@ -492,11 +439,10 @@ submitButton.addEventListener("click", function (e) {
       Authorization: `Bearer ${window.localStorage.token}`,
     },
   }).then((res) => {
-    console.log(res);
     if (res.ok) {
       return res.json().then((data) => {
         //On retourne à la modal 1
-        displayModal1();
+        displayModalGalerie();
         //Génération des projets sur la modal
         generateWorksModal();
         //Génération des projets sur la galerie
@@ -505,7 +451,6 @@ submitButton.addEventListener("click", function (e) {
     } else {
       returnToLogin(res.status);
       alert("Une erreur s'est produite");
-      console.log(res);
     }
   });
 });
@@ -517,9 +462,32 @@ function returnToLogin(errorCode) {
   }
 }
 
-//Function qui récupère les works
+//Function qui récupère tous les works
 async function getWorks() {
   const response = await fetch(linkApi);
   const works = await response.json();
   return works;
+}
+
+//Display works in the DOM
+function displayGivenWorks(worksToDisplay) {
+  // Récupération de l'élément du DOM qui accueillera les fiches
+  const gallery = document.querySelector(".gallery");
+  gallery.innerHTML = "";
+  for (let i = 0; i < worksToDisplay.length; i++) {
+    const article = worksToDisplay[i];
+    // Création d’une balise dédiée à un projet
+    const figure = document.createElement("figure");
+    gallery.appendChild(figure);
+    //Création des balises
+    const imageElement = document.createElement("img");
+    imageElement.src = article.imageUrl;
+    imageElement.alt = article.title;
+    figure.appendChild(imageElement);
+
+    //Création de l'élement figcaption
+    const figcaption = document.createElement("figcaption");
+    figcaption.innerText = article.title;
+    figure.appendChild(figcaption);
+  }
 }

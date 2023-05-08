@@ -370,7 +370,7 @@ a:visited{
 }
 
 .modal-wrapper h3 {
-	font-family: Work Sans;
+	font-family: 'Work Sans';
 	font-size: 26px;
 	font-weight: 400;
 	line-height: 30px;
@@ -409,7 +409,6 @@ a:visited{
 	width: 17px;
 	height: 17px;
 	border-radius: 2px;
-	text-justify: center;
 	text-align: center;
 	padding: 4px;
 	cursor: pointer;
@@ -483,7 +482,7 @@ a:visited{
 	width: 173px;
 	border-radius: 50px;
 	color: #306685;
-	font-family: Work Sans;
+	font-family: 'Work Sans';
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 16px;

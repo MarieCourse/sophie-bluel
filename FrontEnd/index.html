@@ -20,14 +20,14 @@
 
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
-  <div id="bandeau" class="unlogged-hidden">
-    <div class="modifier">
-      <i class="fa-regular fa-pen-to-square"></i>
-      <p>Mode édition</p>
-    </div>
-    <button class="button-blanc">publier les changements</button>
-  </div>
   <body>
+    <div id="bandeau" class="unlogged-hidden">
+      <div class="modifier">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <p>Mode édition</p>
+      </div>
+      <button class="button-blanc">publier les changements</button>
+    </div>
     <header>
       <a href="./index.html"
         ><h1>Sophie Bluel <span>ARCHITECTE D'INTÉRIEUR</span></h1></a
@@ -87,19 +87,21 @@
           >
         </div>
         <!-- Création des boites modales-->
-        <aside
+        <div
           id="modal"
           class="modal"
           aria-hidden="true"
           role="dialog"
-          aria-labelledby="title-modal"
+          aria-labelledby="title-gallery-modal title-formulaire-modal"
           style="display: none"
         >
           <div class="modal-wrapper modal-stop">
             <i class="close-modal fa-solid fa-xmark"></i>
             <!-- Création de la boite modale 1-->
             <div class="gallery-hidden">
-              <h3 class="title-modal">Galerie photo</h3>
+              <h3 class="title-modal" id="title-gallery-modal">
+                Galerie photo
+              </h3>
               <div id="galerie-modal"></div>
               <input class="btn-vert" type="button" value="Ajouter une photo" />
               <a href="#">Supprimer la galerie</a>
@@ -107,7 +109,9 @@
             <!-- Création de la boite modale 2-->
             <div class="form-hidden">
               <i class="fa-solid fa-arrow-left-long"></i>
-              <h3 class="title-modal">Ajout photo</h3>
+              <h3 class="title-modal" id="title-formulaire-modal">
+                Ajout photo
+              </h3>
               <!-- Formulaire pour ajouter une nouvelle image -->
               <form enctype="multipart/form-data" method="post">
                 <!-- Button pour selectionner un fichier -->
@@ -121,19 +125,18 @@
                       id="file"
                       accept=".jpg, .jpeg, .png"
                       required
-                      max-size="4,194,304"
                     />
                     <button type="button">+ Ajouter photo</button>
                     <p>jpg, png : 4mo max</p>
                   </div>
-                  <img />
+                  <img src="#" alt="" />
                 </div>
                 <!-- Reste du formulaire -->
                 <div id="form-modal"></div>
               </form>
             </div>
           </div>
-        </aside>
+        </div>
 
         <!-- Barre de filtres -->
         <div>
@@ -157,12 +160,12 @@
     </main>
 
     <script src="script.js"></script>
+    <footer>
+      <nav>
+        <ul>
+          <li>Mentions Légales</li>
+        </ul>
+      </nav>
+    </footer>
   </body>
-  <footer>
-    <nav>
-      <ul>
-        <li>Mentions Légales</li>
-      </ul>
-    </nav>
-  </footer>
 </html>
