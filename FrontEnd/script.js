@@ -101,6 +101,8 @@ if (checkIfTokenExist()) {
   for (var i = 0; i < loggedHidden.length; i++) {
     loggedHidden[i].style.display = "none";
   }
+  document.querySelector("#portfolio > div:first-child").style.marginBottom =
+    "50px";
 } else {
   for (var i = 0; i < unloggedHidden.length; i++) {
     unloggedHidden[i].style.display = "none";
@@ -137,7 +139,7 @@ const openModal = function (e) {
   buttonAddPhoto.addEventListener("click", function () {
     displayModalFormulaireAjout();
   });
-  cd;
+
   //Revenir à la modal 1 (galerie)
   const goBack = document.querySelector(".fa-arrow-left-long");
   goBack.addEventListener("click", function () {
