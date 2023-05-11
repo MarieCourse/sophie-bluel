@@ -137,7 +137,7 @@ const openModal = function (e) {
   buttonAddPhoto.addEventListener("click", function () {
     displayModalFormulaireAjout();
   });
-
+  cd;
   //Revenir à la modal 1 (galerie)
   const goBack = document.querySelector(".fa-arrow-left-long");
   goBack.addEventListener("click", function () {
