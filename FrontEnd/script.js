@@ -1,14 +1,13 @@
 let allProjects = []; //Test pour acceder aux projects et filtrer
 
 const linkApi = "http://localhost:5678/api/works";
+const linkApiCategories = "http://localhost:5678/api/categories";
 
 getWorks()
   .then((data) => {
-    allProjects = data; //Réutiliser pour le filtre Tous
+    allProjects = data;
     generateWorks(data);
-    generateCategories(data);
     generateWorksModal(data);
-    generateCategoriesModal(data);
   })
   .catch((error) => {
     // document.location = "./login.html";
@@ -17,8 +16,31 @@ getWorks()
     );
   });
 
-//Création des buttons de filtrage
-function generateCategories(data) {
+getCategories()
+  .then((data) => {
+    generateCategories(data);
+    generateCategoriesModal(data);
+  })
+  .catch((error) => {
+    console.log(
+      "Erreur de connexion avec le serveur, Veuillez vérifier l'état du serveur"
+    );
+  });
+
+//Génération des catégories à afficher
+
+/*
+  - Récupere tous les catégories
+  - Affiche les données dans le DOM
+*/
+function generateCategories(categories) {
+  getCategories().then((categories) => {
+    displayGivenCategories(categories);
+  });
+}
+
+//Affichage des buttons de filtrage
+function displayGivenCategories(data) {
   const categoriesSet = new Set();
   const categories = document.querySelector("#filtres");
 
@@ -28,9 +50,8 @@ function generateCategories(data) {
   btnTous.classList.add("btn-tous", "filter");
   categories.appendChild(btnTous);
 
-  //Création des autres buttons
   for (let i = 0; i < data.length; i++) {
-    const currentCategorie = data[i].category.name;
+    const currentCategorie = data[i].name;
     if (!categoriesSet.has(currentCategorie)) {
       const btn = document.createElement("button");
       btn.innerText = currentCategorie;
@@ -41,12 +62,20 @@ function generateCategories(data) {
   }
 }
 
+//Récuperation de données pour créer les categories depuis l'API
+async function getCategories() {
+  const response = await fetch(linkApiCategories);
+  const categories = await response.json();
+  return categories;
+}
+
 //Génération des projets à afficher
 
 /*
   - Récuperer tous les Works
   - Affiche les données dans le DOM
 */
+
 function generateWorks(works) {
   getWorks().then((works) => {
     displayGivenWorks(works);
@@ -333,19 +362,22 @@ formElement.appendChild(submitButton); //
 
 //Récuperation des catégories depuis l'API
 function generateCategoriesModal(data) {
-  const categoriesSet = new Set();
+  getCategories().then((data) => {
+    const categoriesSet = new Set();
 
-  for (let i = 0; i < data.length; i++) {
-    const currentCategorie = data[i].category.name;
-    let categoryId = data[i].category.id;
-    if (!categoriesSet.has(currentCategorie)) {
-      const option = document.createElement("option");
-      option.innerText = currentCategorie;
-      option.setAttribute("value", categoryId);
-      selectCategory.appendChild(option);
-      categoriesSet.add(currentCategorie);
+    //Création des options d'après les données recuperées depuis l'API
+    for (let i = 0; i < data.length; i++) {
+      const currentCategorie = data[i].name;
+      let categoryId = data[i].id;
+      if (!categoriesSet.has(currentCategorie)) {
+        const option = document.createElement("option");
+        option.innerText = currentCategorie;
+        option.setAttribute("value", categoryId);
+        selectCategory.appendChild(option);
+        categoriesSet.add(currentCategorie);
+      }
     }
-  }
+  });
 }
 
 //Ajouter une nouvelle photo
