@@ -85,7 +85,7 @@ Password: S0phie
 
 ## Author
 
-Maria Carrera
-[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-9cf?style=for-the-badge&logo=appveyor)](https://mariecourse.github.io/portfolio/)
+Maria Carrera  
+[![Portfolio](https://img.shields.io/badge/Portfolio-9cf?style=for-the-badge&color=d64045)](https://mariecourse.github.io/portfolio/)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/in/maria-carrera-france/)
