@@ -23,7 +23,7 @@ Deployed as a front-end developer to reinforce a team tasked with designing the 
 
 ### Screenshot
 
-![](./nina-carducci-screenshot.png)
+![](./sophie-bluel-screenshot.png)
 
 ### Links
 
